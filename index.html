@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎮 आकृति कार्टून गेम 🎮</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Hind:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cartoon: ['"Fredoka One"', '"Hind"', 'cursive', 'sans-serif'],
+            hindi: ['"Hind"', '"Nunito"', 'sans-serif'],
+            body: ['"Nunito"', '"Hind"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              yellow: '#FFDF00',
+              orange: '#FF7A00',
+              pink: '#FF3385',
+              purple: '#8B3DFF',
+              blue: '#00C8FF',
+              green: '#00E676',
+              dark: '#1F1147',
+              navy: '#150A33'
+            }
+          },
+          boxShadow: {
+            'pop': '0 8px 0 rgba(0,0,0,0.25)',
+            'pop-sm': '0 4px 0 rgba(0,0,0,0.25)',
+            'pop-lg': '0 12px 0 rgba(0,0,0,0.28)',
+            'glow-pink': '0 0 20px rgba(255, 51, 133, 0.6)',
+            'glow-yellow': '0 0 25px rgba(255, 223, 0, 0.7)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Nunito', 'Hind', sans-serif;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .font-cartoon {
+      font-family: 'Fredoka One', 'Hind', cursive;
+    }
+    /* Floating animated clouds / stars */
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    .anim-bounce { animation: bounce-slow 3s infinite ease-in-out; }
+    .anim-wiggle { animation: wiggle 2s infinite ease-in-out; }
+    .anim-pulse { animation: pulse-glow 2s infinite ease-in-out; }
+
+    /* Custom 3D Cartoon button press */
+    .btn-3d {
+      transition: all 0.1s ease;
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.25) !important;
+    }
+
+    /* Modal slide up */
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-enter {
+      animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Confetti particle styling */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      animation: fallDown 2s ease-out forwards;
+    }
+    @keyframes fallDown {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(350px) rotate(720deg); opacity: 0; }
+    }
+    /* Hide scrollbar but keep scroll */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-[#180B38] text-white min-h-screen relative overflow-x-hidden selection:bg-brand-pink">
+
+  <!-- BACKGROUND DECORATIONS -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40">
+    <div class="absolute -top-16 -left-16 w-64 h-64 bg-brand-pink/30 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 -right-20 w-80 h-80 bg-brand-blue/30 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-20 left-10 w-96 h-96 bg-brand-purple/40 rounded-full blur-3xl"></div>
+    <!-- Floating stars/shapes -->
+    <span class="absolute top-20 left-12 text-2xl anim-bounce" style="animation-delay: 0.2s">⭐</span>
+    <span class="absolute top-44 right-8 text-3xl anim-bounce" style="animation-delay: 1.1s">🎈</span>
+    <span class="absolute top-3/4 left-6 text-2xl anim-wiggle">🎮</span>
+    <span class="absolute bottom-28 right-10 text-2xl anim-bounce" style="animation-delay: 0.7s">⚡</span>
+    <span class="absolute top-2/3 right-1/4 text-2xl anim-pulse">✨</span>
+  </div>
+
+  <!-- STICKY TOP APP HEADER -->
+  <header class="sticky top-0 z-40 bg-[#1f0d4b]/90 backdrop-blur-md border-b-4 border-brand-purple px-4 py-2.5 shadow-lg">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-orange to-brand-yellow flex items-center justify-center text-xl shadow-pop-sm border-2 border-white transform hover:rotate-12 transition">
+          👾
+        </div>
+        <div>
+          <h1 class="font-cartoon text-lg md:text-xl text-brand-yellow tracking-wide leading-none drop-shadow-[0_2px_0_rgba(0,0,0,0.8)]">
+            आकृति कार्टून गेम
+          </h1>
+          <p class="text-[10px] text-pink-300 font-bold tracking-tight">KIDS GAMING ZONE</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center space-x-2">
+        <!-- Sound Toggle -->
+        <button id="soundToggleBtn" onclick="toggleAudio()" class="btn-3d bg-brand-purple hover:bg-purple-600 px-3 py-1.5 rounded-xl border-2 border-white/60 font-bold text-xs flex items-center gap-1 shadow-pop-sm">
+          <span id="soundIcon">🔊</span>
+          <span id="soundText" class="hidden sm:inline">Sound ON</span>
+        </button>
+        <!-- Quick Stats Pill -->
+        <div onclick="scrollToSection('profile-section')" class="cursor-pointer bg-black/40 hover:bg-black/60 px-3 py-1 rounded-xl border border-yellow-400/40 flex items-center space-x-1.5">
+          <span class="text-sm">🪙</span>
+          <span id="navTotalScore" class="font-cartoon text-brand-yellow text-sm">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BOTTOM / SUB NAVIGATION -->
+  <nav class="sticky top-[58px] z-30 bg-[#28135e] border-b border-purple-500/30 px-2 py-1.5 overflow-x-auto no-scrollbar shadow-md">
+    <div class="max-w-4xl mx-auto flex items-center justify-between sm:justify-center gap-2 text-xs font-bold text-gray-200">
+      <button onclick="scrollToSection('home-hero')" class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-brand-pink active:scale-95 transition flex items-center gap-1">
+        🏠 Home
+      </button>
+      <button onclick="scrollToSection('games-grid')" class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-brand-pink text-white hover:bg-pink-600 active:scale-95 transition flex items-center gap-1 shadow-sm">
+        🎮 Games (10)
+      </button>
+      <button onclick="scrollToSection('leaderboard-section')" class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-brand-blue active:scale-95 transition flex items-center gap-1">
+        🏆 Leaderboard
+      </button>
+      <button onclick="scrollToSection('achievements-section')" class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-brand-yellow hover:text-black active:scale-95 transition flex items-center gap-1">
+        ⭐ Badges
+      </button>
+      <button onclick="scrollToSection('profile-section')" class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-brand-green hover:text-black active:scale-95 transition flex items-center gap-1">
+        👤 Profile
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="relative z-10 max-w-4xl mx-auto px-4 pb-20">
+
+    <!-- HERO SECTION -->
+    <section id="home-hero" class="pt-6 pb-8 text-center">
+      <!-- Cartoon Mascot Banner -->
+      <div class="inline-flex items-center gap-2 bg-gradient-to-r from-brand-pink/30 via-brand-purple/40 to-brand-blue/30 px-4 py-1.5 rounded-full border-2 border-brand-yellow/60 mb-3 anim-pulse shadow-glow-yellow">
+        <span class="text-xl">🌟</span>
+        <span class="font-bold text-xs md:text-sm text-yellow-300">100% Free • कोई डाउनलोड नहीं • सीधे खेलें</span>
+        <span class="text-xl">🌟</span>
+      </div>
+
+      <h1 class="font-cartoon text-3xl sm:text-5xl md:text-6xl text-brand-yellow tracking-wider drop-shadow-[0_4px_0_#993300] leading-tight mb-2">
+        🎮 आकृति कार्टून गेम 🎮
+      </h1>
+      
+      <p class="text-base sm:text-xl font-bold text-cyan-300 mb-1 max-w-xl mx-auto">
+        “छोटे-छोटे गेम खेलो, मज़ा करो और अपना हाई स्कोर बनाओ!”
+      </p>
+      <p class="text-xs sm:text-sm text-purple-200 mb-6 font-semibold">
+        “एक वेबसाइट, ढेर सारे मजेदार गेम!”
+      </p>
+
+      <!-- Cartoon Characters Showcase -->
+      <div class="flex items-center justify-center gap-3 sm:gap-6 my-4 select-none">
+        <div class="w-14 h-14 sm:w-18 sm:h-18 bg-pink-500 rounded-3xl p-2 border-3 border-white shadow-pop flex flex-col items-center justify-center anim-wiggle">
+          <span class="text-2xl sm:text-3xl">🐱</span>
+          <span class="text-[9px] font-black uppercase text-yellow-200">चिंटू</span>
+        </div>
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-yellow-400 rounded-3xl p-2 border-3 border-white shadow-pop flex flex-col items-center justify-center anim-bounce">
+          <span class="text-3xl sm:text-4xl">🐵</span>
+          <span class="text-[10px] font-black uppercase text-purple-900">मोटू</span>
+        </div>
+        <div class="w-14 h-14 sm:w-18 sm:h-18 bg-blue-500 rounded-3xl p-2 border-3 border-white shadow-pop flex flex-col items-center justify-center anim-wiggle" style="animation-delay: 0.5s">
+          <span class="text-2xl sm:text-3xl">🐰</span>
+          <span class="text-[9px] font-black uppercase text-white">बंटी</span>
+        </div>
+        <div class="w-14 h-14 sm:w-18 sm:h-18 bg-emerald-400 rounded-3xl p-2 border-3 border-white shadow-pop flex flex-col items-center justify-center anim-bounce" style="animation-delay: 0.8s">
+          <span class="text-2xl sm:text-3xl">🐸</span>
+          <span class="text-[9px] font-black uppercase text-green-950">टिंकू</span>
+        </div>
+      </div>
+
+      <!-- BIG PLAY NOW BUTTON -->
+      <div class="mt-4">
+        <button onclick="scrollToSection('games-grid')" class="btn-3d bg-gradient-to-r from-brand-orange via-yellow-400 to-brand-yellow text-purple-950 font-cartoon text-xl sm:text-2xl px-8 py-4 rounded-3xl border-4 border-white shadow-pop-lg hover:scale-105 active:scale-95 transition inline-flex items-center gap-3">
+          <span class="text-2xl sm:text-3xl animate-pulse">▶</span>
+          <span>PLAY NOW / अभी खेलें!</span>
+          <span class="text-2xl sm:text-3xl">🚀</span>
+        </button>
+      </div>
+
+      <!-- Quick summary pills -->
+      <div class="flex flex-wrap justify-center gap-2 mt-6 text-xs">
+        <span class="bg-black/30 border border-white/20 px-3 py-1 rounded-full text-pink-300">🐍 Snake</span>
+        <span class="bg-black/30 border border-white/20 px-3 py-1 rounded-full text-blue-300">🏎️ Car Racing</span>
+        <span class="bg-black/30 border border-white/20 px-3 py-1 rounded-full text-yellow-300">🎈 Balloon Pop</span>
+        <span class="bg-black/30 border border-white/20 px-3 py-1 rounded-full text-green-300">🧱 Brick Breaker</span>
+        <span class="bg-black/30 border border-white/20 px-3 py-1 rounded-full text-purple-300">+ 6 और गेम्स!</span>
+      </div>
+    </section>
+
+    <!-- SECTION: 10 PLAYABLE GAMES ZONE -->
+    <section id="games-grid" class="pt-6 pb-10">
+      <div class="flex items-center justify-between mb-4 border-b-2 border-purple-500/40 pb-2">
+        <div>
+          <h2 class="font-cartoon text-2xl sm:text-3xl text-brand-yellow flex items-center gap-2 drop-shadow">
+            <span>🎯</span> GAME ZONE
+          </h2>
+          <p class="text-xs sm:text-sm text-gray-300 font-semibold">10 असली खेलने योग्य गेम्स — क्लिक करें और तुरंत खेलें!</p>
+        </div>
+        <span class="bg-brand-pink text-white font-bold text-xs px-2.5 py-1 rounded-full shadow-pop-sm">
+          10 Active
+        </span>
+      </div>
+
+      <!-- GRID OF 10 CARTOON GAME CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+
+        <!-- 1. Snake Game Card -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-emerald-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-emerald-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/30 border-2 border-emerald-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🐍
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-emerald-300 truncate">1. Cartoon Snake</h3>
+                <span class="bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full">Easy</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">Snake को control करके सोने के सिक्के खाएं और पूंछ से बचें!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-emerald-400 mt-1.5">
+                <span>🏆 High: <span id="card-high-snake">0</span></span>
+                <span>🪙 Coins Run</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('snake')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-emerald-500 to-green-400 text-black font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 2. Memory Card Match -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-purple-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-purple-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-purple-500/30 border-2 border-purple-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🧠
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-purple-300 truncate">2. Memory Card</h3>
+                <span class="bg-purple-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">Medium</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">एक जैसे प्यारे कार्टून कार्ड्स ढूंढकर मैचिंग जोड़ियां बनाएं!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-purple-300 mt-1.5">
+                <span>🏆 Best: <span id="card-high-memory">0</span></span>
+                <span>⏱️ Timer & Moves</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('memory')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-purple-500 to-pink-500 text-white font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 3. Tic Tac Toe -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-blue-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-blue-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-blue-500/30 border-2 border-blue-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              ❌⭕
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-blue-300 truncate">3. Tic Tac Toe</h3>
+                <span class="bg-blue-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">Easy</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">Computer (AI) के खिलाफ X और O खेलें और 3 की लाइन बनाएं!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-blue-300 mt-1.5">
+                <span>🏆 Wins: <span id="card-high-ttt">0</span></span>
+                <span>🤖 Smart AI Mode</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('ttt')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-blue-500 to-cyan-400 text-black font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 4. Cartoon Car Racing -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-amber-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-amber-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/30 border-2 border-amber-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🏎️
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-amber-300 truncate">4. Cartoon Car Racing</h3>
+                <span class="bg-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full">Hard</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">तेज रफ्तार कार्टून कार चलाएं और सामने आती गाड़ियों से बचें!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-amber-300 mt-1.5">
+                <span>🏆 High: <span id="card-high-racing">0</span></span>
+                <span>⚡ High Speed</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('racing')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 5. Brick Breaker -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-rose-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-rose-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-rose-500/30 border-2 border-rose-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🧱
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-rose-300 truncate">5. Brick Breaker</h3>
+                <span class="bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">Medium</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">Paddle से उछलती बॉल को संभालें और रंग-बिरंगी ईंटें फोड़ें!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-rose-300 mt-1.5">
+                <span>🏆 Score: <span id="card-high-brick">0</span></span>
+                <span>❤️ 3 Lives</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('brick')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-rose-500 to-pink-400 text-white font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 6. Target Clicker -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-cyan-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-cyan-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-cyan-500/30 border-2 border-cyan-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🎯
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-cyan-300 truncate">6. Target Game</h3>
+                <span class="bg-cyan-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full">Medium</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">स्क्रीन पर भागते कार्टून निशानों पर तेजी से क्लिक करके पॉइंट्स कमाएं!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-cyan-300 mt-1.5">
+                <span>🏆 High: <span id="card-high-target">0</span></span>
+                <span>⏱️ 30s Timer</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('target')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-cyan-500 to-teal-400 text-black font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 7. Balloon Pop -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-pink-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-pink-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-pink-500/30 border-2 border-pink-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🎈
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-pink-300 truncate">7. Balloon Pop</h3>
+                <span class="bg-pink-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">Easy</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">हवा में उड़ते रंग-बिरंगे गुब्बारों को फोड़ें! काले बम वाले से बचें!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-pink-300 mt-1.5">
+                <span>🏆 High: <span id="card-high-balloon">0</span></span>
+                <span>💥 Combo Pop</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('balloon')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-pink-500 to-brand-orange text-white font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 8. Coin Collector -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-yellow-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-yellow-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-yellow-500/30 border-2 border-yellow-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🪙
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-yellow-300 truncate">8. Coin Collector</h3>
+                <span class="bg-yellow-400 text-black text-[10px] font-black px-2 py-0.5 rounded-full">Medium</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">आकाश से गिरते सोने के सिक्के लूटें और पत्थरों से बचते रहें!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-yellow-300 mt-1.5">
+                <span>🏆 Coins: <span id="card-high-coin">0</span></span>
+                <span>🧺 Catcher</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('coin')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 9. Rock Paper Scissors -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-indigo-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-indigo-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-indigo-500/30 border-2 border-indigo-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              ✊✋✌️
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-indigo-300 truncate">9. Rock Paper Scissors</h3>
+                <span class="bg-indigo-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">Easy</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">पत्थर, कागज़ और कैंची! रोबोट को मात देकर अपनी स्ट्रीक बनाएं!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-indigo-300 mt-1.5">
+                <span>🏆 Streak: <span id="card-high-rps">0</span></span>
+                <span>✊✋✌️ Match</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('rps')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+        <!-- 10. Cartoon Runner -->
+        <div class="bg-gradient-to-br from-[#2D1B69] to-[#1F104C] rounded-3xl p-4 border-4 border-orange-400 shadow-pop relative overflow-hidden flex flex-col justify-between hover:border-orange-300 transition group">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-2xl bg-orange-500/30 border-2 border-orange-400 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition shadow-inner">
+              🏃
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <h3 class="font-cartoon text-lg text-orange-300 truncate">10. Cartoon Runner</h3>
+                <span class="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">Hard</span>
+              </div>
+              <p class="text-xs text-gray-300 mt-1 line-clamp-2">प्यारे कार्टून कैरेक्टर को दौड़ाएं और कांटों के ऊपर से छलांग लगाएं!</p>
+              <div class="flex gap-3 text-[11px] font-bold text-orange-300 mt-1.5">
+                <span>🏆 Score: <span id="card-high-runner">0</span></span>
+                <span>🦘 Jump Controls</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="launchGame('runner')" class="mt-3.5 w-full btn-3d bg-gradient-to-r from-orange-500 to-amber-500 text-white font-cartoon text-sm py-2.5 rounded-2xl border-2 border-white shadow-pop-sm flex items-center justify-center gap-2 hover:brightness-110">
+            <span>▶ PLAY GAME / खेलें</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: LEADERBOARD -->
+    <section id="leaderboard-section" class="pt-6 pb-10">
+      <div class="bg-[#241352] rounded-3xl p-5 border-4 border-yellow-400 shadow-pop">
+        <div class="flex items-center justify-between mb-4 border-b border-purple-500/40 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-3xl">🏆</span>
+            <div>
+              <h2 class="font-cartoon text-xl sm:text-2xl text-brand-yellow">हाई स्कोर लीडरबोर्ड (LEADERBOARD)</h2>
+              <p class="text-xs text-gray-300">आपके सभी खेलों के बेस्ट स्कोर्स आपके ब्राउज़र में सुरक्षित हैं</p>
+            </div>
+          </div>
+          <button onclick="resetLeaderboardScores()" class="text-xs text-pink-300 hover:text-white underline">
+            Reset
+          </button>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="text-xs uppercase bg-[#180a3a] text-yellow-300 rounded-xl">
+              <tr>
+                <th class="py-2.5 px-3 rounded-l-xl">Rank</th>
+                <th class="py-2.5 px-3">Player</th>
+                <th class="py-2.5 px-3">Game</th>
+                <th class="py-2.5 px-3 rounded-r-xl text-right">Score</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardRows" class="divide-y divide-purple-500/20 font-semibold">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: ACHIEVEMENTS -->
+    <section id="achievements-section" class="pt-6 pb-10">
+      <div class="bg-[#241352] rounded-3xl p-5 border-4 border-brand-pink shadow-pop">
+        <div class="flex items-center gap-2 mb-4 border-b border-purple-500/40 pb-3">
+          <span class="text-3xl">⭐</span>
+          <div>
+            <h2 class="font-cartoon text-xl sm:text-2xl text-pink-300">उपलब्धियां और मेडल (ACHIEVEMENTS)</h2>
+            <p class="text-xs text-gray-300">गेम खेलें और कार्टून ट्रॉफियां अनलॉक करें!</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="badgesGrid">
+          <!-- 5 badges -->
+          <div id="badge-firstWin" class="bg-[#180A3A] p-3 rounded-2xl border-2 border-gray-600 text-center flex flex-col items-center opacity-60 transition">
+            <span class="text-3xl mb-1">🏆</span>
+            <span class="font-cartoon text-xs text-yellow-300">First Win</span>
+            <span class="text-[10px] text-gray-400 mt-1">पहली जीत दर्ज करें</span>
+            <span class="badge-status text-[9px] mt-2 font-bold bg-gray-700 px-2 py-0.5 rounded-full">Locked</span>
+          </div>
+
+          <div id="badge-highScore" class="bg-[#180A3A] p-3 rounded-2xl border-2 border-gray-600 text-center flex flex-col items-center opacity-60 transition">
+            <span class="text-3xl mb-1">⭐</span>
+            <span class="font-cartoon text-xs text-yellow-300">High Score</span>
+            <span class="text-[10px] text-gray-400 mt-1">किसी गेम में 50+ अंक</span>
+            <span class="badge-status text-[9px] mt-2 font-bold bg-gray-700 px-2 py-0.5 rounded-full">Locked</span>
+          </div>
+
+          <div id="badge-fiveGames" class="bg-[#180A3A] p-3 rounded-2xl border-2 border-gray-600 text-center flex flex-col items-center opacity-60 transition">
+            <span class="text-3xl mb-1">🔥</span>
+            <span class="font-cartoon text-xs text-yellow-300">5 Games Played</span>
+            <span class="text-[10px] text-gray-400 mt-1">कुल 5 राउंड खेलें</span>
+            <span class="badge-status text-[9px] mt-2 font-bold bg-gray-700 px-2 py-0.5 rounded-full">Locked</span>
+          </div>
+
+          <div id="badge-perfectScore" class="bg-[#180A3A] p-3 rounded-2xl border-2 border-gray-600 text-center flex flex-col items-center opacity-60 transition">
+            <span class="text-3xl mb-1">🎯</span>
+            <span class="font-cartoon text-xs text-yellow-300">Perfect Score</span>
+            <span class="text-[10px] text-gray-400 mt-1">100+ पॉइंट्स बनाएं</span>
+            <span class="badge-status text-[9px] mt-2 font-bold bg-gray-700 px-2 py-0.5 rounded-full">Locked</span>
+          </div>
+
+          <div id="badge-gameMaster" class="bg-[#180A3A] p-3 rounded-2xl border-2 border-gray-600 text-center flex flex-col items-center opacity-60 transition col-span-2 sm:col-span-1">
+            <span class="text-3xl mb-1">👑</span>
+            <span class="font-cartoon text-xs text-yellow-300">Game Master</span>
+            <span class="text-[10px] text-gray-400 mt-1">10 गेम खेलें</span>
+            <span class="badge-status text-[9px] mt-2 font-bold bg-gray-700 px-2 py-0.5 rounded-full">Locked</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: PLAYER PROFILE -->
+    <section id="profile-section" class="pt-6 pb-12">
+      <div class="bg-[#241352] rounded-3xl p-5 border-4 border-cyan-400 shadow-pop">
+        <div class="flex items-center gap-2 mb-4 border-b border-purple-500/40 pb-3">
+          <span class="text-3xl">👤</span>
+          <div>
+            <h2 class="font-cartoon text-xl sm:text-2xl text-cyan-300">खिलाड़ी प्रोफाइल (PLAYER PROFILE)</h2>
+            <p class="text-xs text-gray-300">आपका गेमिंग रिकॉर्ड और आंकड़े</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+          <!-- Profile Card -->
+          <div class="bg-[#180A3A] p-4 rounded-2xl border-2 border-cyan-400/40 text-center flex flex-col items-center">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-brand-pink to-brand-yellow flex items-center justify-center text-3xl border-2 border-white shadow-pop-sm mb-2">
+              🦸
+            </div>
+            <div class="flex items-center gap-1.5 justify-center">
+              <input id="playerNameInput" type="text" value="सुपर गेमर" onchange="updatePlayerName(this.value)" class="bg-black/50 border border-purple-400 px-2.5 py-1 rounded-xl text-center text-sm font-bold text-yellow-300 w-32 focus:outline-none focus:ring-2 focus:ring-brand-pink" />
+              <button onclick="document.getElementById('playerNameInput').focus()" class="text-xs text-cyan-300">✏️</button>
+            </div>
+            <span class="text-[11px] text-gray-400 mt-1">Level 1 Cartoon Hero</span>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="sm:col-span-2 grid grid-cols-2 gap-2.5">
+            <div class="bg-[#180A3A] p-3 rounded-xl border border-purple-500/30 text-center">
+              <span class="text-xs text-gray-400 block font-bold">Total Games Played</span>
+              <span id="profGamesCount" class="font-cartoon text-xl text-brand-orange">0</span>
+            </div>
+            <div class="bg-[#180A3A] p-3 rounded-xl border border-purple-500/30 text-center">
+              <span class="text-xs text-gray-400 block font-bold">Total Score</span>
+              <span id="profTotalScore" class="font-cartoon text-xl text-brand-yellow">0</span>
+            </div>
+            <div class="bg-[#180A3A] p-3 rounded-xl border border-purple-500/30 text-center">
+              <span class="text-xs text-gray-400 block font-bold">Best Single Score</span>
+              <span id="profBestScore" class="font-cartoon text-xl text-emerald-400">0</span>
+            </div>
+            <div class="bg-[#180A3A] p-3 rounded-xl border border-purple-500/30 text-center">
+              <span class="text-xs text-gray-400 block font-bold">Unlocked Badges</span>
+              <span id="profBadgesCount" class="font-cartoon text-xl text-pink-400">0 / 5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER / ABOUT -->
+    <footer class="pt-4 text-center text-xs text-gray-400 border-t border-purple-500/30">
+      <p class="font-cartoon text-base text-yellow-300 mb-1">🎮 आकृति कार्टून गेम 🎮</p>
+      <p class="mb-2">Made with 💖 for Kids & Fun Gamers everywhere. HTML5 + CSS3 + Vanilla JavaScript.</p>
+      <p class="text-[10px] text-gray-500">© 2025 आकृति कार्टून गेम. All original characters & mini-games.</p>
+    </footer>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- FULLSCREEN PLAYABLE GAME MODAL CONTAINER -->
+  <!-- ========================================== -->
+  <div id="gameModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4">
+    <div id="gameModalBox" class="bg-[#241352] w-full max-w-lg rounded-3xl border-4 border-yellow-400 shadow-pop-lg flex flex-col max-h-[96vh] overflow-hidden modal-enter relative">
+      
+      <!-- Modal Top Header -->
+      <div class="bg-[#19093b] px-4 py-3 border-b-2 border-purple-500/50 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="modalGameIcon" class="text-2xl">🎮</span>
+          <div>
+            <h3 id="modalGameTitle" class="font-cartoon text-lg text-yellow-300 leading-tight">Game Title</h3>
+            <p id="modalGameSub" class="text-[11px] text-gray-300">Sub instruction</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="closeGameModal()" class="w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 border border-white text-white font-bold flex items-center justify-center text-sm shadow-pop-sm">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Score & Top Bar in Modal -->
+      <div class="bg-[#13072c] px-4 py-2 border-b border-purple-500/30 flex items-center justify-between text-xs font-bold text-gray-200">
+        <div class="flex items-center gap-3">
+          <span class="text-yellow-300">⭐ स्कोर: <span id="mScore" class="font-cartoon text-sm text-yellow-400">0</span></span>
+          <span class="text-pink-300">🏆 बेस्ट: <span id="mHigh" class="font-cartoon text-sm text-pink-400">0</span></span>
+        </div>
+        <!-- In-Game Controls (Play, Pause, Restart) -->
+        <div class="flex items-center gap-1.5">
+          <button id="mPauseBtn" onclick="togglePauseCurrentGame()" class="bg-purple-600 hover:bg-purple-500 text-white px-2 py-0.5 rounded-lg border border-white/40 text-[11px] shadow-sm">
+            ⏸️ Pause
+          </button>
+          <button onclick="restartCurrentGame()" class="bg-brand-orange hover:bg-orange-600 text-white px-2 py-0.5 rounded-lg border border-white/40 text-[11px] shadow-sm">
+            🔄 Restart
+          </button>
+        </div>
+      </div>
+
+      <!-- GAME SCREEN CONTENT AREA -->
+      <div id="gamePlayArea" class="flex-1 p-3 flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-b from-[#1C0E42] to-[#12082E] min-h-[360px]">
+        <!-- Dynamic Canvas or DOM content injected here -->
+      </div>
+
+      <!-- IN-GAME TOUCH ON-SCREEN CONTROLS (for mobile play) -->
+      <div id="touchControlsBar" class="bg-[#19093b] px-3 py-2 border-t-2 border-purple-500/40 flex items-center justify-around">
+        <!-- Injected per game (e.g. Left/Right or Jump) -->
+      </div>
+
+      <!-- Game Over / Victory Overlay inside modal -->
+      <div id="gameOverOverlay" class="absolute inset-0 bg-black/90 z-20 hidden flex flex-col items-center justify-center text-center p-6">
+        <div class="w-16 h-16 rounded-full bg-yellow-400 border-4 border-white text-3xl flex items-center justify-center mb-2 shadow-pop-sm anim-bounce" id="overlayIcon">
+          🎉
+        </div>
+        <h3 id="overlayTitle" class="font-cartoon text-2xl sm:text-3xl text-yellow-300 mb-1">शानदार खेल!</h3>
+        <p id="overlayMessage" class="text-sm text-gray-200 mb-3">आपका स्कोर दर्ज हो गया है!</p>
+        <div class="bg-[#241352] px-6 py-3 rounded-2xl border-2 border-purple-400 mb-4">
+          <span class="text-xs text-gray-300 block font-bold">अंतिम स्कोर (FINAL SCORE)</span>
+          <span id="overlayScore" class="font-cartoon text-3xl text-yellow-400">0</span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="restartCurrentGame()" class="btn-3d bg-gradient-to-r from-green-500 to-emerald-400 text-black font-cartoon px-5 py-2.5 rounded-2xl border-2 border-white shadow-pop-sm">
+            🔄 फिर से खेलें
+          </button>
+          <button onclick="closeGameModal()" class="btn-3d bg-purple-600 text-white font-cartoon px-4 py-2.5 rounded-2xl border-2 border-white/60 shadow-pop-sm">
+            🚪 बाहर निकलें
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENT TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed top-20 right-4 z-50 bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-4 py-2.5 rounded-2xl border-2 border-white shadow-pop-lg hidden items-center gap-2 transform transition-all duration-300">
+    <span class="text-2xl" id="toastIcon">🏆</span>
+    <div>
+      <h4 class="font-cartoon text-xs text-purple-950 uppercase" id="toastTitle">Achievement Unlocked!</h4>
+      <p class="text-xs font-bold text-black" id="toastDesc">First Win</p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT GAME LOGIC & SOUND ENGINE -->
+  <script>
+    /* ========================================================
+       1. WEB AUDIO SYNTHESIZER (NO EXTERNAL ASSETS REQUIRED)
+       ======================================================== */
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          audioCtx = new AudioContext();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === 'start') {
+          // Cheerful chime
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(330, now);
+          osc.frequency.exponentialRampToValueAtTime(660, now + 0.15);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'coin') {
+          // Retro high beep
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(987.77, now);
+          osc.frequency.setValueAtTime(1318.51, now + 0.08);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'pop') {
+          // Bubble burst pop
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(100, now + 0.08);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'hit') {
+          // Quick bounce
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(220, now);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        } else if (type === 'win') {
+          // Fanfare sequence
+          [440, 554, 659, 880].forEach((freq, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + idx * 0.1);
+            g.gain.setValueAtTime(0.25, now + idx * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.2);
+            o.start(now + idx * 0.1);
+            o.stop(now + idx * 0.1 + 0.2);
+          });
+        } else if (type === 'gameover') {
+          // Sad slide
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        }
+      } catch (err) {
+        console.warn('Audio error:', err);
+      }
+    }
+
+    function toggleAudio() {
+      initAudio();
+      audioEnabled = !audioEnabled;
+      const icon = document.getElementById('soundIcon');
+      const text = document.getElementById('soundText');
+      if (audioEnabled) {
+        icon.textContent = '🔊';
+        text.textContent = 'Sound ON';
+        playSound('coin');
+      } else {
+        icon.textContent = '🔇';
+        text.textContent = 'Sound OFF';
+      }
+    }
+
+    /* ========================================================
+       2. LOCALSTORAGE / PROFILE / STATS / ACHIEVEMENTS ENGINE
+       ======================================================== */
+    const STORAGE_KEY = 'aakriti_cartoon_game_data_v2';
+    let gameState = {
+      playerName: 'सुपर गेमर',
+      totalGamesPlayed: 0,
+      totalScore: 0,
+      bestScore: 0,
+      scores: {
+        snake: 0,
+        memory: 0,
+        ttt: 0,
+        racing: 0,
+        brick: 0,
+        target: 0,
+        balloon: 0,
+        coin: 0,
+        rps: 0,
+        runner: 0
+      },
+      badges: {
+        firstWin: false,
+        highScore: false,
+        fiveGames: false,
+        perfectScore: false,
+        gameMaster: false
+      }
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          gameState = { ...gameState, ...JSON.parse(saved) };
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      renderUIFromState();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+      } catch (e) {
+        console.error(e);
+      }
+      renderUIFromState();
+    }
+
+    function updatePlayerName(newName) {
+      if (newName.trim()) {
+        gameState.playerName = newName.trim();
+        saveState();
+      }
+    }
+
+    function renderUIFromState() {
+      // Profile inputs & text
+      document.getElementById('playerNameInput').value = gameState.playerName;
+      document.getElementById('profGamesCount').textContent = gameState.totalGamesPlayed;
+      document.getElementById('profTotalScore').textContent = gameState.totalScore;
+      document.getElementById('navTotalScore').textContent = gameState.totalScore;
+      document.getElementById('profBestScore').textContent = gameState.bestScore;
+
+      // Cards high scores
+      for (const [key, val] of Object.entries(gameState.scores)) {
+        const el = document.getElementById(`card-high-${key}`);
+        if (el) el.textContent = val;
+      }
+
+      // Badges
+      let unlockedCount = 0;
+      for (const [bKey, val] of Object.entries(gameState.badges)) {
+        const badgeEl = document.getElementById(`badge-${bKey}`);
+        if (badgeEl) {
+          const statusSpan = badgeEl.querySelector('.badge-status');
+          if (val) {
+            badgeEl.classList.remove('opacity-60', 'border-gray-600');
+            badgeEl.classList.add('opacity-100', 'border-yellow-400', 'bg-[#291357]', 'shadow-glow-yellow');
+            if (statusSpan) {
+              statusSpan.textContent = 'Unlocked ⭐';
+              statusSpan.className = 'badge-status text-[9px] mt-2 font-bold bg-green-500 text-black px-2 py-0.5 rounded-full';
+            }
+            unlockedCount++;
+          } else {
+            badgeEl.classList.add('opacity-60', 'border-gray-600');
+            badgeEl.classList.remove('opacity-100', 'border-yellow-400', 'bg-[#291357]', 'shadow-glow-yellow');
+            if (statusSpan) {
+              statusSpan.textContent = 'Locked';
+              statusSpan.className = 'badge-status text-[9px] mt-2 font-bold bg-gray-700 px-2 py-0.5 rounded-full';
+            }
+          }
+        }
+      }
+      document.getElementById('profBadgesCount').textContent = `${unlockedCount} / 5`;
+
+      // Render Leaderboard
+      renderLeaderboard();
+    }
+
+    function checkBadges(lastScore) {
+      let triggered = null;
+
+      if (lastScore > 0 && !gameState.badges.firstWin) {
+        gameState.badges.firstWin = true;
+        triggered = { title: 'First Win 🏆', desc: 'आपने पहली जीत हासिल की!' };
+      }
+      if (lastScore >= 50 && !gameState.badges.highScore) {
+        gameState.badges.highScore = true;
+        triggered = { title: 'High Score ⭐', desc: '50+ स्कोर दर्ज किया!' };
+      }
+      if (gameState.totalGamesPlayed >= 5 && !gameState.badges.fiveGames) {
+        gameState.badges.fiveGames = true;
+        triggered = { title: '5 Games Played 🔥', desc: '5 गेम्स पूरे किए!' };
+      }
+      if (lastScore >= 100 && !gameState.badges.perfectScore) {
+        gameState.badges.perfectScore = true;
+        triggered = { title: 'Perfect Score 🎯', desc: '100+ का महा-स्कोर बनाया!' };
+      }
+      if (gameState.totalGamesPlayed >= 10 && !gameState.badges.gameMaster) {
+        gameState.badges.gameMaster = true;
+        triggered = { title: 'Game Master 👑', desc: 'आप आकृति कार्टून गेम के मास्टर हैं!' };
+      }
+
+      if (triggered) {
+        showToast(triggered.title, triggered.desc);
+        triggerConfetti();
+      }
+    }
+
+    function showToast(title, desc) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastDesc').textContent = desc;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3500);
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById('leaderboardRows');
+      const gameNames = {
+        snake: '🐍 Snake',
+        memory: '🧠 Memory Card',
+        ttt: '❌⭕ Tic Tac Toe',
+        racing: '🏎️ Car Racing',
+        brick: '🧱 Brick Breaker',
+        target: '🎯 Target Game',
+        balloon: '🎈 Balloon Pop',
+        coin: '🪙 Coin Collector',
+        rps: '✊✋✌️ Rock Paper Scissors',
+        runner: '🏃 Cartoon Runner'
+      };
+
+      // Sort scores descending
+      const entries = Object.entries(gameState.scores)
+        .map(([key, score]) => ({ key, game: gameNames[key], score }))
+        .sort((a, b) => b.score - a.score);
+
+      let html = '';
+      entries.forEach((item, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+        const rowBg = index === 0 ? 'bg-yellow-400/10' : '';
+        html += `
+          <tr class="${rowBg} hover:bg-white/5 transition">
+            <td class="py-2.5 px-3 font-cartoon text-yellow-300">${medal}</td>
+            <td class="py-2.5 px-3 text-white flex items-center gap-1.5">
+              <span>🦸</span>
+              <span class="truncate max-w-[120px]">${gameState.playerName}</span>
+            </td>
+            <td class="py-2.5 px-3 text-cyan-300 font-bold">${item.game}</td>
+            <td class="py-2.5 px-3 text-right font-cartoon text-emerald-400">${item.score}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function resetLeaderboardScores() {
+      if (confirm('क्या आप सचमुच अपने रिकॉर्ड और स्कोर्स रीसेट करना चाहते हैं?')) {
+        for (const key in gameState.scores) gameState.scores[key] = 0;
+        gameState.totalScore = 0;
+        gameState.totalGamesPlayed = 0;
+        gameState.bestScore = 0;
+        saveState();
+      }
+    }
+
+    function recordGameResult(gameKey, score) {
+      gameState.totalGamesPlayed += 1;
+      gameState.totalScore += score;
+      if (score > gameState.bestScore) {
+        gameState.bestScore = score;
+      }
+      if (score > gameState.scores[gameKey]) {
+        gameState.scores[gameKey] = score;
+      }
+      saveState();
+      checkBadges(score);
+    }
+
+    function triggerConfetti() {
+      const container = document.getElementById('gamePlayArea');
+      if (!container) return;
+      const colors = ['#FFDF00', '#FF3385', '#00C8FF', '#00E676', '#FF7A00'];
+      for (let i = 0; i < 30; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.left = `${Math.random() * 90}%`;
+        piece.style.animationDelay = `${Math.random() * 0.5}s`;
+        container.appendChild(piece);
+        setTimeout(() => piece.remove(), 2500);
+      }
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    /* ========================================================
+       3. MODAL CONTROLLER & GAME ROUTING SYSTEM
+       ======================================================== */
+    let currentGameKey = null;
+    let currentGameInstance = null;
+    let isGamePaused = false;
+
+    const gameMetadata = {
+      snake: { title: '1. Cartoon Snake', icon: '🐍', sub: 'दिशा बटन दबाकर सिक्के खाएं, दीवारों से बचें!' },
+      memory: { title: '2. Memory Card', icon: '🧠', sub: 'दो एक जैसे कार्टून कार्ड्स पलटें!' },
+      ttt: { title: '3. Tic Tac Toe', icon: '❌⭕', sub: 'कंप्यूटर के खिलाफ 3 की सीधी लाइन बनाएं!' },
+      racing: { title: '4. Cartoon Car Racing', icon: '🏎️', sub: 'गाड़ी बाएं-दाएं मोड़ें, दुर्घटना से बचें!' },
+      brick: { title: '5. Brick Breaker', icon: '🧱', sub: 'पैडल से बॉल उछालें और ईंटें तोड़ें!' },
+      target: { title: '6. Target Game', icon: '🎯', sub: '30 सेकंड में कार्टून निशानों पर तेजी से टैप करें!' },
+      balloon: { title: '7. Balloon Pop', icon: '🎈', sub: 'गुब्बारे फोड़ें, बम वाले काले गुब्बारे से बचें!' },
+      coin: { title: '8. Coin Collector', icon: '🪙', sub: 'सिक्के बास्केट में जमा करें, पत्थर छोड़ें!' },
+      rps: { title: '9. Rock Paper Scissors', icon: '✊✋✌️', sub: 'पत्थर, कागज़ या कैंची चुनें और जीतें!' },
+      runner: { title: '10. Cartoon Runner', icon: '🏃', sub: 'जंप बटन दबाकर कांटों के ऊपर से कूदें!' }
+    };
+
+    function launchGame(gameKey) {
+      initAudio();
+      currentGameKey = gameKey;
+      isGamePaused = false;
+      const meta = gameMetadata[gameKey];
+
+      document.getElementById('modalGameIcon').textContent = meta.icon;
+      document.getElementById('modalGameTitle').textContent = meta.title;
+      document.getElementById('modalGameSub').textContent = meta.sub;
+      document.getElementById('mScore').textContent = '0';
+      document.getElementById('mHigh').textContent = gameState.scores[gameKey] || 0;
+      document.getElementById('mPauseBtn').textContent = '⏸️ Pause';
+
+      // Hide overlay
+      document.getElementById('gameOverOverlay').classList.add('hidden');
+
+      // Show modal
+      document.getElementById('gameModal').classList.remove('hidden');
+
+      playSound('start');
+      startSpecificGame(gameKey);
+    }
+
+    function closeGameModal() {
+      if (currentGameInstance && currentGameInstance.destroy) {
+        currentGameInstance.destroy();
+      }
+      currentGameInstance = null;
+      document.getElementById('gameModal').classList.add('hidden');
+      document.getElementById('gamePlayArea').innerHTML = '';
+      document.getElementById('touchControlsBar').innerHTML = '';
+    }
+
+    function togglePauseCurrentGame() {
+      if (!currentGameInstance) return;
+      isGamePaused = !isGamePaused;
+      const btn = document.getElementById('mPauseBtn');
+      btn.textContent = isGamePaused ? '▶️ Resume' : '⏸️ Pause';
+      if (currentGameInstance.onPauseToggle) {
+        currentGameInstance.onPauseToggle(isGamePaused);
+      }
+    }
+
+    function restartCurrentGame() {
+      if (currentGameInstance && currentGameInstance.destroy) {
+        currentGameInstance.destroy();
+      }
+      document.getElementById('gameOverOverlay').classList.add('hidden');
+      document.getElementById('mScore').textContent = '0';
+      isGamePaused = false;
+      document.getElementById('mPauseBtn').textContent = '⏸️ Pause';
+      playSound('start');
+      startSpecificGame(currentGameKey);
+    }
+
+    function showEndOverlay(score, isWin = false, customTitle = null) {
+      playSound(isWin ? 'win' : 'gameover');
+      recordGameResult(currentGameKey, score);
+      
+      const overlay = document.getElementById('gameOverOverlay');
+      document.getElementById('overlayIcon').textContent = isWin ? '🏆' : '💥';
+      document.getElementById('overlayTitle').textContent = customTitle || (isWin ? 'शानदार जीत! (YOU WON!)' : 'गेम ओवर! (GAME OVER)');
+      document.getElementById('overlayMessage').textContent = isWin ? 'बधाई हो! आपने यह स्तर जीत लिया!' : 'कोई बात नहीं, फिर से कोशिश करें और नया रिकॉर्ड बनाएं!';
+      document.getElementById('overlayScore').textContent = score;
+      overlay.classList.remove('hidden');
+
+      if (isWin || score >= 20) {
+        triggerConfetti();
+      }
+    }
+
+    /* ========================================================
+       4. MINI-GAMES IMPLEMENTATIONS (100% WORKING & PLAYABLE)
+       ======================================================== */
+
+    function startSpecificGame(key) {
+      const area = document.getElementById('gamePlayArea');
+      const touchBar = document.getElementById('touchControlsBar');
+      area.innerHTML = '';
+      touchBar.innerHTML = '';
+
+      if (key === 'snake') initSnakeGame(area, touchBar);
+      else if (key === 'memory') initMemoryGame(area, touchBar);
+      else if (key === 'ttt') initTicTacToeGame(area, touchBar);
+      else if (key === 'racing') initRacingGame(area, touchBar);
+      else if (key === 'brick') initBrickGame(area, touchBar);
+      else if (key === 'target') initTargetGame(area, touchBar);
+      else if (key === 'balloon') initBalloonGame(area, touchBar);
+      else if (key === 'coin') initCoinGame(area, touchBar);
+      else if (key === 'rps') initRPSGame(area, touchBar);
+      else if (key === 'runner') initRunnerGame(area, touchBar);
+    }
+
+    /* --------------------------------------------------------
+       GAME 1: CARTOON SNAKE (Canvas-based)
+       -------------------------------------------------------- */
+    function initSnakeGame(area, touchBar) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 320;
+      canvas.height = 320;
+      canvas.className = 'rounded-2xl border-4 border-emerald-400 bg-[#0c1f15] shadow-inner max-w-full';
+      area.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      const gridSize = 16;
+      const cols = 20;
+      let snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+      let dx = 1, dy = 0;
+      let nextDx = 1, nextDy = 0;
+      let food = { x: 15, y: 10 };
+      let score = 0;
+      let gameInterval = null;
+      let paused = false;
+
+      function spawnFood() {
+        food = {
+          x: Math.floor(Math.random() * cols),
+          y: Math.floor(Math.random() * cols)
+        };
+      }
+
+      function step() {
+        if (paused) return;
+        dx = nextDx;
+        dy = nextDy;
+
+        const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+        // Wall collisions
+        if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= cols) {
+          clearInterval(gameInterval);
+          showEndOverlay(score, false);
+          return;
+        }
+
+        // Self collision
+        for (let seg of snake) {
+          if (seg.x === head.x && seg.y === head.y) {
+            clearInterval(gameInterval);
+            showEndOverlay(score, false);
+            return;
+          }
+        }
+
+        snake.unshift(head);
+
+        // Food hit
+        if (head.x === food.x && head.y === food.y) {
+          score += 10;
+          document.getElementById('mScore').textContent = score;
+          playSound('coin');
+          spawnFood();
+        } else {
+          snake.pop();
+        }
+
+        // Draw
+        ctx.fillStyle = '#0a1d12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw food (Golden cartoon coin)
+        ctx.font = '14px sans-serif';
+        ctx.fillText('🪙', food.x * gridSize - 1, food.y * gridSize + 14);
+
+        // Draw Snake
+        snake.forEach((seg, i) => {
+          ctx.fillStyle = i === 0 ? '#00E676' : '#22C55E';
+          ctx.beginPath();
+          ctx.arc(seg.x * gridSize + gridSize/2, seg.y * gridSize + gridSize/2, gridSize/2 - 1, 0, Math.PI * 2);
+          ctx.fill();
+          if (i === 0) {
+            // Cute eyes
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(seg.x * gridSize + 6, seg.y * gridSize + 6, 2, 0, Math.PI*2);
+            ctx.arc(seg.x * gridSize + 10, seg.y * gridSize + 6, 2, 0, Math.PI*2);
+            ctx.fill();
+          }
+        });
+      }
+
+      gameInterval = setInterval(step, 110);
+
+      // Keyboard
+      function onKey(e) {
+        if (e.key === 'ArrowUp' && dy === 0) { nextDx = 0; nextDy = -1; }
+        else if (e.key === 'ArrowDown' && dy === 0) { nextDx = 0; nextDy = 1; }
+        else if (e.key === 'ArrowLeft' && dx === 0) { nextDx = -1; nextDy = 0; }
+        else if (e.key === 'ArrowRight' && dx === 0) { nextDx = 1; nextDy = 0; }
+      }
+      window.addEventListener('keydown', onKey);
+
+      // Onscreen Touch Controls
+      touchBar.innerHTML = `
+        <div class="flex items-center justify-center gap-2">
+          <button id="s-left" class="btn-3d bg-emerald-600 active:bg-emerald-500 text-white font-bold w-12 h-12 rounded-2xl text-xl shadow-pop-sm">⬅️</button>
+          <div class="flex flex-col gap-1">
+            <button id="s-up" class="btn-3d bg-emerald-600 active:bg-emerald-500 text-white font-bold w-12 h-10 rounded-2xl text-xl shadow-pop-sm">⬆️</button>
+            <button id="s-down" class="btn-3d bg-emerald-600 active:bg-emerald-500 text-white font-bold w-12 h-10 rounded-2xl text-xl shadow-pop-sm">⬇️</button>
+          </div>
+          <button id="s-right" class="btn-3d bg-emerald-600 active:bg-emerald-500 text-white font-bold w-12 h-12 rounded-2xl text-xl shadow-pop-sm">➡️</button>
+        </div>
+      `;
+      document.getElementById('s-left').onclick = () => { if (dx === 0) { nextDx = -1; nextDy = 0; } };
+      document.getElementById('s-right').onclick = () => { if (dx === 0) { nextDx = 1; nextDy = 0; } };
+      document.getElementById('s-up').onclick = () => { if (dy === 0) { nextDx = 0; nextDy = -1; } };
+      document.getElementById('s-down').onclick = () => { if (dy === 0) { nextDx = 0; nextDy = 1; } };
+
+      currentGameInstance = {
+        destroy: () => {
+          clearInterval(gameInterval);
+          window.removeEventListener('keydown', onKey);
+        },
+        onPauseToggle: (p) => { paused = p; }
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 2: MEMORY CARD (DOM-based matching)
+       -------------------------------------------------------- */
+    function initMemoryGame(area, touchBar) {
+      const emojis = ['🐱', '🐶', '🦊', '🐸', '🐼', '🐵'];
+      const cards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+
+      let flipped = [];
+      let matchedCount = 0;
+      let moves = 0;
+      let score = 100;
+      let timer = 40;
+      let timerInterval = null;
+
+      area.innerHTML = `
+        <div class="w-full flex justify-between items-center px-4 mb-2 text-xs font-bold text-purple-200">
+          <span>चालें (Moves): <span id="memMoves" class="text-yellow-300 font-cartoon text-sm">0</span></span>
+          <span>समय (Timer): <span id="memTimer" class="text-pink-300 font-cartoon text-sm">40s</span></span>
+        </div>
+        <div id="cardGrid" class="grid grid-cols-4 gap-2 w-full max-w-[320px]"></div>
+      `;
+
+      const grid = document.getElementById('cardGrid');
+
+      cards.forEach((emoji, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'w-full h-16 sm:h-20 bg-gradient-to-br from-purple-700 to-indigo-800 rounded-2xl border-2 border-purple-400 font-cartoon text-2xl flex items-center justify-center text-transparent shadow-pop-sm transition transform active:scale-95';
+        btn.dataset.emoji = emoji;
+        btn.dataset.index = idx;
+        btn.textContent = '❓';
+
+        btn.onclick = () => {
+          if (flipped.length >= 2 || btn.classList.contains('matched') || flipped.includes(btn)) return;
+          playSound('hit');
+          btn.textContent = emoji;
+          btn.classList.remove('text-transparent');
+          btn.classList.add('bg-pink-600', 'border-yellow-300', 'scale-105');
+          flipped.push(btn);
+
+          if (flipped.length === 2) {
+            moves++;
+            document.getElementById('memMoves').textContent = moves;
+            const [b1, b2] = flipped;
+            if (b1.dataset.emoji === b2.dataset.emoji) {
+              playSound('coin');
+              b1.classList.add('matched', 'bg-green-500', 'border-white');
+              b2.classList.add('matched', 'bg-green-500', 'border-white');
+              matchedCount++;
+              score += 20;
+              document.getElementById('mScore').textContent = score;
+              flipped = [];
+              if (matchedCount === emojis.length) {
+                clearInterval(timerInterval);
+                showEndOverlay(score, true, 'शानदार मेमोरी! (ALL MATCHED!)');
+              }
+            } else {
+              setTimeout(() => {
+                b1.textContent = '❓';
+                b2.textContent = '❓';
+                b1.classList.remove('bg-pink-600', 'border-yellow-300', 'scale-105');
+                b2.classList.remove('bg-pink-600', 'border-yellow-300', 'scale-105');
+                flipped = [];
+              }, 700);
+            }
+          }
+        };
+        grid.appendChild(btn);
+      });
+
+      timerInterval = setInterval(() => {
+        if (!isGamePaused) {
+          timer--;
+          const el = document.getElementById('memTimer');
+          if (el) el.textContent = `${timer}s`;
+          if (timer <= 0) {
+            clearInterval(timerInterval);
+            showEndOverlay(score, false, 'समय समाप्त! (TIME UP!)');
+          }
+        }
+      }, 1000);
+
+      touchBar.innerHTML = `<span class="text-xs text-purple-300 font-bold">💡 कार्ड्स पर टैप करके समान जोड़ियां बनाएं!</span>`;
+
+      currentGameInstance = {
+        destroy: () => clearInterval(timerInterval),
+        onPauseToggle: () => {}
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 3: TIC TAC TOE (Player vs Computer AI)
+       -------------------------------------------------------- */
+    function initTicTacToeGame(area, touchBar) {
+      let board = ['', '', '', '', '', '', '', '', ''];
+      let isOver = false;
+      let score = 0;
+
+      area.innerHTML = `
+        <div class="mb-3 text-center">
+          <p id="tttStatus" class="font-cartoon text-sm text-yellow-300">आपकी बारी: आप ❌ हैं (Computer ⭕ है)</p>
+        </div>
+        <div class="grid grid-cols-3 gap-2.5 w-64 h-64 bg-purple-900/60 p-3 rounded-3xl border-4 border-blue-400 shadow-pop">
+          ${[0,1,2,3,4,5,6,7,8].map(i => `
+            <button id="ttt-${i}" onclick="window.tttClick(${i})" class="w-full h-full bg-[#1b0a3a] hover:bg-purple-800 rounded-2xl border-2 border-blue-400/40 text-3xl font-cartoon flex items-center justify-center transition shadow-sm"></button>
+          `).join('')}
+        </div>
+      `;
+
+      function checkWin(b, player) {
+        const wins = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+        return wins.some(([x,y,z]) => b[x] === player && b[y] === player && b[z] === player);
+      }
+
+      function checkDraw(b) {
+        return b.every(c => c !== '');
+      }
+
+      window.tttClick = (i) => {
+        if (isOver || board[i] !== '' || isGamePaused) return;
+        board[i] = '❌';
+        document.getElementById(`ttt-${i}`).textContent = '❌';
+        document.getElementById(`ttt-${i}`).classList.add('text-brand-pink');
+        playSound('hit');
+
+        if (checkWin(board, '❌')) {
+          isOver = true;
+          score = 30;
+          document.getElementById('mScore').textContent = score;
+          document.getElementById('tttStatus').textContent = '🎉 आप जीत गए! (You Won!)';
+          setTimeout(() => showEndOverlay(score, true, 'बधाई! Tic Tac Toe में जीत!'), 500);
+          return;
+        }
+
+        if (checkDraw(board)) {
+          isOver = true;
+          score = 10;
+          document.getElementById('mScore').textContent = score;
+          document.getElementById('tttStatus').textContent = '🤝 मैच ड्रॉ रहा! (Draw)';
+          setTimeout(() => showEndOverlay(score, false, 'ड्रॉ! दोनों बराबर रहे!'), 500);
+          return;
+        }
+
+        // Computer AI turn
+        document.getElementById('tttStatus').textContent = '🤖 कंप्यूटर सोच रहा है...';
+        setTimeout(() => {
+          if (isOver) return;
+          const emptyIndices = board.map((v, idx) => v === '' ? idx : null).filter(v => v !== null);
+          if (emptyIndices.length > 0) {
+            // Simple smart pick: center, corners or random
+            let pick = emptyIndices.includes(4) ? 4 : emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+            board[pick] = '⭕';
+            document.getElementById(`ttt-${pick}`).textContent = '⭕';
+            document.getElementById(`ttt-${pick}`).classList.add('text-brand-yellow');
+            playSound('hit');
+
+            if (checkWin(board, '⭕')) {
+              isOver = true;
+              document.getElementById('tttStatus').textContent = '💻 कंप्यूटर जीत गया!';
+              setTimeout(() => showEndOverlay(0, false, 'कंप्यूटर जीत गया! फिर से खेलें'), 500);
+              return;
+            }
+            if (checkDraw(board)) {
+              isOver = true;
+              score = 10;
+              document.getElementById('mScore').textContent = score;
+              setTimeout(() => showEndOverlay(score, false, 'मैच ड्रॉ!'), 500);
+              return;
+            }
+          }
+          document.getElementById('tttStatus').textContent = 'आपकी बारी (❌)';
+        }, 400);
+      };
+
+      touchBar.innerHTML = `<span class="text-xs text-blue-200 font-bold">❌⭕ खाने पर टैप करें और 3 की लाइन पूरी करें!</span>`;
+
+      currentGameInstance = {
+        destroy: () => { window.tttClick = null; },
+        onPauseToggle: () => {}
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 4: CARTOON CAR RACING (Canvas)
+       -------------------------------------------------------- */
+    function initRacingGame(area, touchBar) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 280;
+      canvas.height = 360;
+      canvas.className = 'rounded-3xl border-4 border-amber-400 bg-[#121212] shadow-inner max-w-full';
+      area.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      const lanes = [55, 140, 225];
+      let currentLane = 1;
+      let obstacles = [];
+      let score = 0;
+      let speed = 4;
+      let frame = 0;
+      let gameReq = null;
+      let paused = false;
+
+      function spawnObstacle() {
+        const lane = Math.floor(Math.random() * 3);
+        const types = ['🚗', '🚜', '🛢️', '🚧'];
+        obstacles.push({
+          lane: lane,
+          y: -40,
+          emoji: types[Math.floor(Math.random() * types.length)]
+        });
+      }
+
+      function loop() {
+        if (!paused) {
+          frame++;
+          if (frame % 55 === 0) spawnObstacle();
+          if (frame % 200 === 0) speed += 0.5;
+
+          ctx.fillStyle = '#1c1c28';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Road dashes
+          ctx.strokeStyle = '#ffffff40';
+          ctx.setLineDash([20, 20]);
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(95, 0); ctx.lineTo(95, canvas.height);
+          ctx.moveTo(185, 0); ctx.lineTo(185, canvas.height);
+          ctx.stroke();
+
+          // Player Car (Cute Red Cartoon Car)
+          const px = lanes[currentLane];
+          const py = 290;
+          ctx.font = '36px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🏎️', px, py);
+
+          // Move obstacles
+          for (let i = obstacles.length - 1; i >= 0; i--) {
+            const obs = obstacles[i];
+            obs.y += speed;
+            ctx.fillText(obs.emoji, lanes[obs.lane], obs.y);
+
+            // Crash check
+            if (obs.lane === currentLane && obs.y > 260 && obs.y < 310) {
+              playSound('gameover');
+              cancelAnimationFrame(gameReq);
+              showEndOverlay(score, false);
+              return;
+            }
+
+            // Scored
+            if (obs.y > canvas.height + 20) {
+              obstacles.splice(i, 1);
+              score += 10;
+              document.getElementById('mScore').textContent = score;
+              playSound('coin');
+            }
+          }
+        }
+        gameReq = requestAnimationFrame(loop);
+      }
+      gameReq = requestAnimationFrame(loop);
+
+      function moveLeft() { if (currentLane > 0) { currentLane--; playSound('hit'); } }
+      function moveRight() { if (currentLane < 2) { currentLane++; playSound('hit'); } }
+
+      function onKey(e) {
+        if (e.key === 'ArrowLeft') moveLeft();
+        if (e.key === 'ArrowRight') moveRight();
+      }
+      window.addEventListener('keydown', onKey);
+
+      touchBar.innerHTML = `
+        <div class="flex items-center gap-6">
+          <button id="car-left" class="btn-3d bg-amber-500 text-black font-cartoon px-6 py-2.5 rounded-2xl text-lg border-2 border-white shadow-pop-sm">⬅️ बाएँ</button>
+          <button id="car-right" class="btn-3d bg-amber-500 text-black font-cartoon px-6 py-2.5 rounded-2xl text-lg border-2 border-white shadow-pop-sm">दाएँ ➡️</button>
+        </div>
+      `;
+      document.getElementById('car-left').onclick = moveLeft;
+      document.getElementById('car-right').onclick = moveRight;
+
+      currentGameInstance = {
+        destroy: () => {
+          cancelAnimationFrame(gameReq);
+          window.removeEventListener('keydown', onKey);
+        },
+        onPauseToggle: (p) => { paused = p; }
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 5: BRICK BREAKER (Canvas)
+       -------------------------------------------------------- */
+    function initBrickGame(area, touchBar) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 300;
+      canvas.height = 340;
+      canvas.className = 'rounded-3xl border-4 border-rose-400 bg-[#170a26] shadow-inner max-w-full';
+      area.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      let paddleW = 70;
+      let paddleX = (canvas.width - paddleW) / 2;
+      let ballX = canvas.width / 2;
+      let ballY = 240;
+      let ballDx = 2.5;
+      let ballDy = -2.5;
+      let lives = 3;
+      let score = 0;
+      let paused = false;
+      let gameReq = null;
+
+      const brickRows = 4;
+      const brickCols = 5;
+      const brickW = 50;
+      const brickH = 16;
+      const brickColors = ['#FF3385', '#FF7A00', '#FFDF00', '#00E676'];
+      let bricks = [];
+
+      for (let r = 0; r < brickRows; r++) {
+        bricks[r] = [];
+        for (let c = 0; c < brickCols; c++) {
+          bricks[r][c] = { x: 15 + c * (brickW + 6), y: 35 + r * (brickH + 8), status: 1, color: brickColors[r] };
+        }
+      }
+
+      function draw() {
+        if (!paused) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Draw Bricks
+          let activeBricks = 0;
+          for (let r = 0; r < brickRows; r++) {
+            for (let c = 0; c < brickCols; c++) {
+              const b = bricks[r][c];
+              if (b.status === 1) {
+                activeBricks++;
+                ctx.fillStyle = b.color;
+                ctx.beginPath();
+                ctx.roundRect(b.x, b.y, brickW, brickH, 4);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff60';
+                ctx.stroke();
+
+                // Ball collision with brick
+                if (ballX > b.x && ballX < b.x + brickW && ballY > b.y && ballY < b.y + brickH) {
+                  ballDy = -ballDy;
+                  b.status = 0;
+                  score += 15;
+                  document.getElementById('mScore').textContent = score;
+                  playSound('pop');
+                }
+              }
+            }
+          }
+
+          if (activeBricks === 0) {
+            cancelAnimationFrame(gameReq);
+            showEndOverlay(score, true, 'जीत गए! सारी ईंटें टूट गईं!');
+            return;
+          }
+
+          // Draw Paddle
+          ctx.fillStyle = '#00C8FF';
+          ctx.beginPath();
+          ctx.roundRect(paddleX, canvas.height - 20, paddleW, 12, 6);
+          ctx.fill();
+
+          // Draw Ball (Cartoon star/shiny ball)
+          ctx.fillStyle = '#FFDF00';
+          ctx.beginPath();
+          ctx.arc(ballX, ballY, 7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
+          ctx.stroke();
+
+          // Move Ball
+          ballX += ballDx;
+          ballY += ballDy;
+
+          // Wall bounce
+          if (ballX + ballDx > canvas.width - 7 || ballX + ballDx < 7) ballDx = -ballDx;
+          if (ballY + ballDy < 7) ballDy = -ballDy;
+          else if (ballY + ballDy > canvas.height - 24) {
+            // Paddle hit
+            if (ballX > paddleX - 5 && ballX < paddleX + paddleW + 5) {
+              ballDy = -Math.abs(ballDy);
+              playSound('hit');
+            } else if (ballY > canvas.height) {
+              lives--;
+              playSound('gameover');
+              if (lives <= 0) {
+                cancelAnimationFrame(gameReq);
+                showEndOverlay(score, false);
+                return;
+              } else {
+                ballX = canvas.width / 2;
+                ballY = 240;
+                ballDy = -2.5;
+              }
+            }
+          }
+        }
+        gameReq = requestAnimationFrame(draw);
+      }
+      gameReq = requestAnimationFrame(draw);
+
+      // Mouse/Touch drag
+      function movePaddle(x) {
+        const rect = canvas.getBoundingClientRect();
+        const relX = x - rect.left;
+        paddleX = Math.max(0, Math.min(canvas.width - paddleW, relX - paddleW / 2));
+      }
+      canvas.onmousemove = (e) => movePaddle(e.clientX);
+      canvas.ontouchmove = (e) => {
+        if (e.touches[0]) movePaddle(e.touches[0].clientX);
+      };
+
+      touchBar.innerHTML = `
+        <div class="flex items-center gap-4">
+          <button id="bp-left" class="btn-3d bg-rose-500 text-white font-cartoon px-6 py-2 rounded-2xl shadow-pop-sm">⬅️ पैडल</button>
+          <button id="bp-right" class="btn-3d bg-rose-500 text-white font-cartoon px-6 py-2 rounded-2xl shadow-pop-sm">पैडल ➡️</button>
+        </div>
+      `;
+      document.getElementById('bp-left').onclick = () => { paddleX = Math.max(0, paddleX - 35); };
+      document.getElementById('bp-right').onclick = () => { paddleX = Math.min(canvas.width - paddleW, paddleX + 35); };
+
+      currentGameInstance = {
+        destroy: () => cancelAnimationFrame(gameReq),
+        onPauseToggle: (p) => { paused = p; }
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 6: TARGET GAME (Clicking Moving Targets)
+       -------------------------------------------------------- */
+    function initTargetGame(area, touchBar) {
+      let score = 0;
+      let timer = 30;
+      let timerInterval = null;
+      let spawnInterval = null;
+
+      area.innerHTML = `
+        <div class="w-full flex justify-between px-3 text-xs font-bold text-cyan-200 mb-2">
+          <span>🎯 हिट्स: <span id="tgtScore" class="font-cartoon text-sm text-yellow-300">0</span></span>
+          <span>⏱️ समय: <span id="tgtTimer" class="font-cartoon text-sm text-pink-300">30s</span></span>
+        </div>
+        <div id="targetField" class="relative w-full h-[280px] bg-[#100826] rounded-2xl border-2 border-cyan-400/50 overflow-hidden shadow-inner"></div>
+      `;
+
+      const field = document.getElementById('targetField');
+      const emojis = ['🎯', '👾', '⭐', '🎈', '👻'];
+
+      function spawnTarget() {
+        if (isGamePaused) return;
+        const target = document.createElement('div');
+        const emo = emojis[Math.floor(Math.random() * emojis.length)];
+        target.className = 'absolute cursor-pointer text-3xl sm:text-4xl transition transform active:scale-75 select-none anim-bounce';
+        target.textContent = emo;
+        const maxX = field.clientWidth - 50;
+        const maxY = field.clientHeight - 50;
+        target.style.left = `${Math.max(10, Math.floor(Math.random() * maxX))}px`;
+        target.style.top = `${Math.max(10, Math.floor(Math.random() * maxY))}px`;
+
+        target.onclick = (e) => {
+          e.stopPropagation();
+          playSound('hit');
+          score += 10;
+          document.getElementById('mScore').textContent = score;
+          document.getElementById('tgtScore').textContent = score;
+          target.remove();
+        };
+
+        field.appendChild(target);
+        setTimeout(() => { if (target.parentNode) target.remove(); }, 1800);
+      }
+
+      spawnInterval = setInterval(spawnTarget, 700);
+
+      timerInterval = setInterval(() => {
+        if (!isGamePaused) {
+          timer--;
+          const el = document.getElementById('tgtTimer');
+          if (el) el.textContent = `${timer}s`;
+          if (timer <= 0) {
+            clearInterval(timerInterval);
+            clearInterval(spawnInterval);
+            showEndOverlay(score, score >= 60, score >= 60 ? 'शार्प शूटर!' : 'समय पूरा!');
+          }
+        }
+      }, 1000);
+
+      touchBar.innerHTML = `<span class="text-xs text-cyan-300 font-bold">🎯 स्क्रीन पर आने वाले निशानों को तेजी से छूएँ!</span>`;
+
+      currentGameInstance = {
+        destroy: () => {
+          clearInterval(timerInterval);
+          clearInterval(spawnInterval);
+        },
+        onPauseToggle: () => {}
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 7: BALLOON POP (Floating Balloons with Bombs)
+       -------------------------------------------------------- */
+    function initBalloonGame(area, touchBar) {
+      let score = 0;
+      let timer = 30;
+      let timerInterval = null;
+      let spawnInterval = null;
+
+      area.innerHTML = `
+        <div class="w-full flex justify-between px-3 text-xs font-bold text-pink-200 mb-2">
+          <span>🎈 फोड़े: <span id="balScore" class="font-cartoon text-sm text-yellow-300">0</span></span>
+          <span>⏱️ टाइमर: <span id="balTimer" class="font-cartoon text-sm text-cyan-300">30s</span></span>
+        </div>
+        <div id="skyField" class="relative w-full h-[280px] bg-gradient-to-b from-[#11053B] to-[#2D0B5A] rounded-2xl border-2 border-pink-400/50 overflow-hidden shadow-inner"></div>
+      `;
+
+      const sky = document.getElementById('skyField');
+      const balloonTypes = [
+        { emo: '🎈', pts: 10, isBomb: false },
+        { emo: '🟡', pts: 15, isBomb: false },
+        { emo: '💖', pts: 20, isBomb: false },
+        { emo: '💣', pts: -25, isBomb: true }
+      ];
+
+      function floatBalloon() {
+        if (isGamePaused) return;
+        const b = document.createElement('div');
+        const bObj = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
+        b.className = 'absolute cursor-pointer text-3xl sm:text-4xl transition transform active:scale-50 select-none';
+        b.textContent = bObj.emo;
+        b.style.left = `${Math.floor(Math.random() * (sky.clientWidth - 45))}px`;
+        b.style.bottom = '-40px';
+
+        sky.appendChild(b);
+
+        let pos = -40;
+        const riseSpeed = 2 + Math.random() * 2;
+        const riseTimer = setInterval(() => {
+          if (!isGamePaused) {
+            pos += riseSpeed;
+            b.style.bottom = `${pos}px`;
+            if (pos > sky.clientHeight + 40) {
+              clearInterval(riseTimer);
+              b.remove();
+            }
+          }
+        }, 30);
+
+        b.onclick = (e) => {
+          e.stopPropagation();
+          clearInterval(riseTimer);
+          if (bObj.isBomb) {
+            playSound('gameover');
+            score = Math.max(0, score + bObj.pts);
+            b.textContent = '💥';
+          } else {
+            playSound('pop');
+            score += bObj.pts;
+            b.textContent = '✨';
+          }
+          document.getElementById('mScore').textContent = score;
+          document.getElementById('balScore').textContent = score;
+          setTimeout(() => b.remove(), 200);
+        };
+      }
+
+      spawnInterval = setInterval(floatBalloon, 600);
+
+      timerInterval = setInterval(() => {
+        if (!isGamePaused) {
+          timer--;
+          const el = document.getElementById('balTimer');
+          if (el) el.textContent = `${timer}s`;
+          if (timer <= 0) {
+            clearInterval(timerInterval);
+            clearInterval(spawnInterval);
+            showEndOverlay(score, score >= 50);
+          }
+        }
+      }, 1000);
+
+      touchBar.innerHTML = `<span class="text-xs text-pink-300 font-bold">🎈 गुब्बारों को फोड़ें! काले बम 💣 से बचें!</span>`;
+
+      currentGameInstance = {
+        destroy: () => {
+          clearInterval(timerInterval);
+          clearInterval(spawnInterval);
+        },
+        onPauseToggle: () => {}
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 8: COIN COLLECTOR (Catcher Basket)
+       -------------------------------------------------------- */
+    function initCoinGame(area, touchBar) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 300;
+      canvas.height = 340;
+      canvas.className = 'rounded-3xl border-4 border-yellow-400 bg-[#160d2b] shadow-inner max-w-full';
+      area.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      let basketW = 60;
+      let basketX = (canvas.width - basketW) / 2;
+      let items = [];
+      let score = 0;
+      let lives = 3;
+      let frame = 0;
+      let paused = false;
+      let gameReq = null;
+
+      function spawnItem() {
+        const isRock = Math.random() < 0.3;
+        items.push({
+          x: Math.random() * (canvas.width - 40) + 10,
+          y: -20,
+          isRock: isRock,
+          speed: 2.5 + Math.random() * 2
+        });
+      }
+
+      function loop() {
+        if (!paused) {
+          frame++;
+          if (frame % 45 === 0) spawnItem();
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Basket
+          ctx.font = '36px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🧺', basketX + basketW / 2, canvas.height - 10);
+
+          // Items
+          for (let i = items.length - 1; i >= 0; i--) {
+            const it = items[i];
+            it.y += it.speed;
+            ctx.fillText(it.isRock ? '🪨' : '🪙', it.x, it.y);
+
+            // Catch test
+            if (it.y > canvas.height - 40 && it.y < canvas.height - 10 && it.x > basketX - 10 && it.x < basketX + basketW + 10) {
+              if (it.isRock) {
+                playSound('gameover');
+                lives--;
+                if (lives <= 0) {
+                  cancelAnimationFrame(gameReq);
+                  showEndOverlay(score, false);
+                  return;
+                }
+              } else {
+                playSound('coin');
+                score += 10;
+                document.getElementById('mScore').textContent = score;
+              }
+              items.splice(i, 1);
+            } else if (it.y > canvas.height + 20) {
+              items.splice(i, 1);
+            }
+          }
+        }
+        gameReq = requestAnimationFrame(loop);
+      }
+      gameReq = requestAnimationFrame(loop);
+
+      function moveBasket(x) {
+        const rect = canvas.getBoundingClientRect();
+        basketX = Math.max(0, Math.min(canvas.width - basketW, x - rect.left - basketW / 2));
+      }
+      canvas.onmousemove = (e) => moveBasket(e.clientX);
+      canvas.ontouchmove = (e) => {
+        if (e.touches[0]) moveBasket(e.touches[0].clientX);
+      };
+
+      touchBar.innerHTML = `
+        <div class="flex items-center gap-4">
+          <button id="cb-left" class="btn-3d bg-yellow-500 text-black font-cartoon px-6 py-2 rounded-2xl shadow-pop-sm">⬅️ बाएँ</button>
+          <button id="cb-right" class="btn-3d bg-yellow-500 text-black font-cartoon px-6 py-2 rounded-2xl shadow-pop-sm">दाएँ ➡️</button>
+        </div>
+      `;
+      document.getElementById('cb-left').onclick = () => { basketX = Math.max(0, basketX - 35); };
+      document.getElementById('cb-right').onclick = () => { basketX = Math.min(canvas.width - basketW, basketX + 35); };
+
+      currentGameInstance = {
+        destroy: () => cancelAnimationFrame(gameReq),
+        onPauseToggle: (p) => { paused = p; }
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 9: ROCK PAPER SCISSORS (Animated RPS)
+       -------------------------------------------------------- */
+    function initRPSGame(area, touchBar) {
+      let streak = 0;
+
+      area.innerHTML = `
+        <div class="text-center w-full">
+          <p class="font-cartoon text-sm text-indigo-200 mb-4" id="rpsMessage">एक विकल्प चुनें और कंप्यूटर को हराएं!</p>
+          <div class="flex justify-center items-center gap-8 mb-6">
+            <div class="text-center">
+              <span class="text-xs text-gray-400 font-bold block mb-1">आप (YOU)</span>
+              <div id="userChoiceBox" class="w-20 h-20 bg-purple-900/60 rounded-3xl border-3 border-indigo-400 flex items-center justify-center text-4xl shadow-pop">
+                ❓
+              </div>
+            </div>
+            <span class="font-cartoon text-2xl text-yellow-300">VS</span>
+            <div class="text-center">
+              <span class="text-xs text-gray-400 font-bold block mb-1">कंप्यूटर (ROBOT)</span>
+              <div id="botChoiceBox" class="w-20 h-20 bg-purple-900/60 rounded-3xl border-3 border-indigo-400 flex items-center justify-center text-4xl shadow-pop">
+                🤖
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-center gap-3">
+            <button onclick="window.playRPS('✊')" class="btn-3d bg-indigo-600 hover:bg-indigo-500 text-white p-3 rounded-2xl border-2 border-white shadow-pop text-2xl">✊ पत्थर</button>
+            <button onclick="window.playRPS('✋')" class="btn-3d bg-indigo-600 hover:bg-indigo-500 text-white p-3 rounded-2xl border-2 border-white shadow-pop text-2xl">✋ कागज़</button>
+            <button onclick="window.playRPS('✌️')" class="btn-3d bg-indigo-600 hover:bg-indigo-500 text-white p-3 rounded-2xl border-2 border-white shadow-pop text-2xl">✌️ कैंची</button>
+          </div>
+        </div>
+      `;
+
+      window.playRPS = (userMove) => {
+        if (isGamePaused) return;
+        playSound('hit');
+        const moves = ['✊', '✋', '✌️'];
+        const botMove = moves[Math.floor(Math.random() * moves.length)];
+
+        document.getElementById('userChoiceBox').textContent = userMove;
+        document.getElementById('botChoiceBox').textContent = botMove;
+
+        const msg = document.getElementById('rpsMessage');
+
+        if (userMove === botMove) {
+          msg.textContent = '🤝 दोनों बराबर! (Tie) फिर से चुनें!';
+          msg.className = 'font-cartoon text-sm text-yellow-300';
+        } else if (
+          (userMove === '✊' && botMove === '✌️') ||
+          (userMove === '✋' && botMove === '✊') ||
+          (userMove === '✌️' && botMove === '✋')
+        ) {
+          playSound('win');
+          streak += 10;
+          document.getElementById('mScore').textContent = streak;
+          msg.textContent = '🎉 आप जीत गए! +10 Points!';
+          msg.className = 'font-cartoon text-sm text-green-400';
+          if (streak >= 50) {
+            setTimeout(() => showEndOverlay(streak, true, 'रॉक पेपर सिज़र्स चैम्पियन!'), 500);
+          }
+        } else {
+          playSound('gameover');
+          msg.textContent = '😢 कंप्यूटर जीता!';
+          msg.className = 'font-cartoon text-sm text-red-400';
+          setTimeout(() => showEndOverlay(streak, false, 'खेल समाप्त!'), 500);
+        }
+      };
+
+      touchBar.innerHTML = `<span class="text-xs text-indigo-300 font-bold">✊ पत्थर, ✋ कागज़, ✌️ कैंची पर टैप करें!</span>`;
+
+      currentGameInstance = {
+        destroy: () => { window.playRPS = null; },
+        onPauseToggle: () => {}
+      };
+    }
+
+    /* --------------------------------------------------------
+       GAME 10: CARTOON RUNNER (Canvas Side Scroller)
+       -------------------------------------------------------- */
+    function initRunnerGame(area, touchBar) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 320;
+      canvas.height = 300;
+      canvas.className = 'rounded-3xl border-4 border-orange-400 bg-[#140b2b] shadow-inner max-w-full';
+      area.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      let charY = 220;
+      let charVy = 0;
+      let isGrounded = true;
+      const gravity = 0.65;
+      let obstacles = [];
+      let score = 0;
+      let frame = 0;
+      let speed = 4;
+      let paused = false;
+      let gameReq = null;
+
+      function spawnObstacle() {
+        obstacles.push({
+          x: canvas.width + 20,
+          emoji: Math.random() < 0.5 ? '🌵' : '🪨',
+          w: 24,
+          h: 24
+        });
+      }
+
+      function jump() {
+        if (isGrounded) {
+          charVy = -11.5;
+          isGrounded = false;
+          playSound('hit');
+        }
+      }
+
+      function loop() {
+        if (!paused) {
+          frame++;
+          if (frame % 70 === 0) spawnObstacle();
+          if (frame % 250 === 0) speed += 0.5;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Ground
+          ctx.fillStyle = '#2b1055';
+          ctx.fillRect(0, 250, canvas.width, 50);
+          ctx.fillStyle = '#FF7A00';
+          ctx.fillRect(0, 248, canvas.width, 4);
+
+          // Physics
+          charVy += gravity;
+          charY += charVy;
+          if (charY >= 220) {
+            charY = 220;
+            charVy = 0;
+            isGrounded = true;
+          }
+
+          // Runner character
+          ctx.font = '36px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('🏃', 50, charY + 24);
+
+          // Move obstacles
+          for (let i = obstacles.length - 1; i >= 0; i--) {
+            const obs = obstacles[i];
+            obs.x -= speed;
+            ctx.fillText(obs.emoji, obs.x, 244);
+
+            // Hit test
+            if (obs.x > 30 && obs.x < 70 && charY > 190) {
+              playSound('gameover');
+              cancelAnimationFrame(gameReq);
+              showEndOverlay(score, false);
+              return;
+            }
+
+            // Scored
+            if (obs.x < -20) {
+              obstacles.splice(i, 1);
+              score += 10;
+              document.getElementById('mScore').textContent = score;
+              playSound('coin');
+            }
+          }
+        }
+        gameReq = requestAnimationFrame(loop);
+      }
+      gameReq = requestAnimationFrame(loop);
+
+      function onKey(e) {
+        if (e.code === 'Space' || e.key === 'ArrowUp') jump();
+      }
+      window.addEventListener('keydown', onKey);
+      canvas.onclick = jump;
+
+      touchBar.innerHTML = `
+        <div class="flex items-center justify-center w-full">
+          <button id="runner-jump-btn" class="btn-3d bg-gradient-to-r from-orange-500 to-amber-400 text-white font-cartoon text-lg px-8 py-3 rounded-2xl border-2 border-white shadow-pop-sm flex items-center gap-2">
+            <span>🦘</span>
+            <span>JUMP / छलांग लगाओ!</span>
+          </button>
+        </div>
+      `;
+      document.getElementById('runner-jump-btn').onclick = jump;
+
+      currentGameInstance = {
+        destroy: () => {
+          cancelAnimationFrame(gameReq);
+          window.removeEventListener('keydown', onKey);
+        },
+        onPauseToggle: (p) => { paused = p; }
+      };
+    }
+
+    // INITIALIZE ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+    });
+  </script>
+</body>
+</html>
